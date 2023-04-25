@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SubStationAPI.Model;
+using SubStationAPI.Service;
 
 namespace SubStationAPI.Controllers
 {
@@ -6,14 +8,22 @@ namespace SubStationAPI.Controllers
     [Route("[controller]/[action]")]
     public class SubstationController : ControllerBase
     {
+        private readonly ISubstationService _service;
+        public SubstationController(ISubstationService service) 
+        {
+            _service = service;
+        }
 
         [HttpGet(Name = "GetCurrentLoad")]
         public double GetCurrentLoad()
         {
-            double maximum = 3.0;
-            double minimum = 1.5;
-            Random random = new Random();
-            return random.NextDouble() * (maximum - minimum) + minimum;
+          return  _service.GetLoad();
+        }
+
+        [HttpPost(Name = "SetLoad")]
+        public void SetCurrentLoad([FromBody] double newload)
+        {
+            _service.SetLoad(newload);
         }
     }
 }
